@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Uplonix</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #e8f5e9;
+        font-family: "Poppins", sans-serif;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .login-container {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .login-header {
+        text-align: center;
+        color: #1b5e20;
+        margin-bottom: 30px;
+      }
+
+      .btn-login {
+        background: linear-gradient(135deg, #1b5e20, #43a047);
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 30px;
+        width: 100%;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        background: linear-gradient(135deg, #2e7d32, #66bb6a);
+      }
+
+      .form-control:focus {
+        border-color: #43a047;
+        box-shadow: 0 0 0 0.2rem rgba(67, 160, 71, 0.25);
+      }
+
+      .register-link {
+        color: #1b5e20;
+        text-decoration: none;
+      }
+
+      .register-link:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-header">
+        <h2><i class="fas fa-lock"></i> Login</h2>
+        <p class="text-muted">Welcome back to Uplonix</p>
+      </div>
+
+      <form id="loginForm" method="POST" action="login.php">
+
+  <div class="mb-3">
+    <label for="email" class="form-label">Email address</label>
+    <input type="email" class="form-control" id="email" name="email" required />
+  </div>
+
+  <div class="mb-3">
+    <label for="password" class="form-label">Password</label>
+    <input type="password" class="form-control" id="password" name="password" required />
+  </div>
+
+  <div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" id="remember" />
+    <label class="form-check-label" for="remember">Remember me</label>
+  </div>
+
+  <button type="submit" class="btn btn-login mb-3">
+    Login <i class="fas fa-sign-in-alt ms-2"></i>
+  </button>
+
+  <div class="text-center">
+    <p class="mb-0">
+      Don't have an account?
+      <a href="register.html" class="register-link">Register here</a>
+    </p>
+  </div>
+
+</form>
+
+    </div>
+
+    <script>
+document.getElementById("loginForm").addEventListener("submit", function(e){
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    if(email === "" || password === ""){
+        alert("Fill all fields!");
+        e.preventDefault(); // sirf empty field me form rokega
+    }
+});
+</script>
+
+  </body>
+</html>
