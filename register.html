@@ -133,17 +133,20 @@
   document
     .getElementById("registerForm")
     .addEventListener("submit", function (e) {
-      // Remove e.preventDefault();
-      // Password match check optional
+      // Basic password match validation
       const password = document.getElementById("password").value;
       const confirmPassword = document.getElementById("confirmPassword").value;
 
       if (password !== confirmPassword) {
-        alert("Passwords do not match!");
-        e.preventDefault(); // Only prevent if passwords don't match
+        e.preventDefault(); // form ko submit hone se rok dega
+        alert("❌ Passwords do not match!");
+        return;
       }
-});
+
+      // Agar password match hai to normal form submit ho jaayega
+    });
 </script>
 
+    </script>
   </body>
 </html>

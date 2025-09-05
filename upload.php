@@ -1,4 +1,7 @@
 <?php
+
+
+
 require_once "includes/db_connect.php"; // DB connection
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['fileInput'])) {

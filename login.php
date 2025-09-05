@@ -3,8 +3,8 @@ session_start();
 require_once "includes/db_connect.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email    = $_POST['email'];
-    $password = $_POST['password'];
+    $email    = trim($_POST['email']);
+    $password = trim($_POST['password']);
 
     $sql = "SELECT * FROM users WHERE email=?";
     $stmt = mysqli_prepare($conn, $sql);
@@ -15,13 +15,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($row = mysqli_fetch_assoc($result)) {
         if (password_verify($password, $row['password'])) {
             $_SESSION['user'] = $row['first_name'] . " " . $row['last_name'];
-            header("Location: dashboard.php");
-            exit();
+
+            // Redirect param handle
+            if (!empty($_POST['redirect']) && $_POST['redirect'] === 'upload') {
+                header("Location: index.php");
+            } else {
+                header("Location: index.php"); // 👈 dashboard.php ke bajay main page
+            }
+            exit;
         } else {
-            echo "❌ Wrong password!";
+            header("Location: login.html?error=wrong"); // ❌ password
+            exit;
         }
     } else {
-        echo "⚠️ User not found!";
+        header("Location: login.html?error=notfound"); // ⚠️ user not found
+        exit;
     }
 }
+
+
 ?>

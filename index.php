@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+// Agar user login hai → name le lo
+$user_name = isset($_SESSION['user']) ? $_SESSION['user'] : null;
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -169,12 +179,22 @@
             </span>
             <span class="text-white me-3">
               <a href="#" style="color: yellow">
-                <i class="fas fa-phone me-1"></i> +934534524525</a
-              >
+                </a>
             </span>
-            <a href="login.html"
-              ><button class="login">Login/Register</button></a
-            >
+
+
+
+            <?php if ($user_name): ?>
+  <span class="text-white me-2">👋 Hello, <?php echo htmlspecialchars($user_name); ?></span>
+  <a href="logout.php"><button class="login"id="themeToggle" class="btn-attractive btn-sm dark">Logout</button></a>
+<?php else: ?>
+  <a href="login.html"><button class="login">Login/Register</button></a>
+<?php endif; ?>
+
+
+
+
+
             <button id="themeToggle" class="btn-attractive btn-sm dark">
               🌙 Dark Mode
             </button>
@@ -197,7 +217,7 @@
         <div class="collapse navbar-collapse" id="navbarMenu">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link nav-hover" href="home.html">Home</a>
+              <a class="nav-link nav-hover" href="index.php">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link nav-hover" href="about.html">About</a>
@@ -211,10 +231,17 @@
     </nav>
 
     <div class="hero">
-      <h1>Welcome to File Upload System</h1>
-      <p>Click below to upload your files securely!</p>
-      <button id="showUpload" class="btn-attractive mt-3">Upload File</button>
-    </div>
+    <?php if(isset($user_name)) { ?>
+        <h3>Hello, <?php echo htmlspecialchars($user_name); ?> 👋</h3>
+    <?php } ?>
+    <h1>Welcome to File Upload System</h1>
+    <p></p>
+    
+    
+    <p>Click below to upload your files </p>
+    <button id="showUpload" class="btn-attractive mt-3">Upload File</button>
+</div>
+
 
     <div class="upload-container" id="uploadBox">
       <div class="upload-header">File Upload Panel</div>
@@ -250,19 +277,12 @@
       ></div>
     </div>
 
-    <div
-      id="dropzone"
-      class="border rounded p-5 text-center mb-3"
-      style="border-style: dashed; background-color: #f9fff9"
-    >
-      <p class="text-muted">Drag & drop files here or click to browse</p>
-      <input
-        type="file"
-        id="fileUpload"
-        name="file"
-        class="form-control d-none"
-      />
-    </div>
+    
+
+    <div class="text-center mt-3">
+    <a href="view.php" class="btn btn-success" style="background-color: #90ee90; color: black; width: 200px;"><b>View Uploaded Files</b></a>
+</div>
+
 
     <div class="progress mt-3 d-none" id="uploadProgress">
       <div
@@ -344,7 +364,7 @@
               <a href="#" class="text-light text-decoration-none">Upload</a>
             </p>
             <p>
-              <a href="#" class="text-light text-decoration-none">Contact</a>
+              <a href="contact.html" class="text-light text-decoration-none">Contact</a>
             </p>
             <p>
               <a href="#" class="text-light text-decoration-none"
@@ -373,7 +393,7 @@
             <p>
               © 2025 UploadSys. All Rights Reserved. | Designed by
               <strong
-                ><span style="color: yellow">Nityanand</span>
+                ><span style="color: yellow"> Nityanand Raj </span>
                 <span style="color: white">Piyush</span>
                 <span style="color: yellow">Neel</span> Mukul</strong
               >
@@ -399,35 +419,47 @@
 
     <!-- JS Upload Logic -->
     <script>
-      const fileInput = document.getElementById("fileInput");
-      const fileName = document.getElementById("file-name");
-      const statusMsg = document.getElementById("statusMsg");
-      const form = document.getElementById("uploadForm");
-      const uploadBox = document.getElementById("uploadBox");
-      const showUploadBtn = document.getElementById("showUpload");
+  // PHP → JS me login status bhejna
+  var isLoggedIn = <?php echo isset($_SESSION['user']) ? 'true' : 'false'; ?>;
 
-      showUploadBtn.addEventListener("click", () => {
-        uploadBox.style.display = "block";
-        uploadBox.classList.add("animate__animated", "animate__fadeInUp");
-        window.scrollTo({ top: uploadBox.offsetTop - 40, behavior: "smooth" });
-      });
+  const fileInput = document.getElementById("fileInput");
+  const fileName = document.getElementById("file-name");
+  const statusMsg = document.getElementById("statusMsg");
+  const form = document.getElementById("uploadForm");
+  const uploadBox = document.getElementById("uploadBox");
+  const showUploadBtn = document.getElementById("showUpload");
 
-      fileInput.addEventListener("change", () => {
-        if (fileInput.files.length > 0) {
-          fileName.textContent = `📄 Selected: ${fileInput.files[0].name}`;
-          statusMsg.textContent = "";
-        } else {
-          fileName.textContent = "";
-        }
-      });
+  // 👇 Upload button click event
+  showUploadBtn.addEventListener("click", () => {
+    if (!isLoggedIn) {
+      // Agar login nahi → login.php bhejo
+      window.location.href = "login.html?redirect=upload";
+    } else {
+      // Agar login hai → upload box dikhao
+      uploadBox.style.display = "block";
+      uploadBox.classList.add("animate__animated", "animate__fadeInUp");
+      window.scrollTo({ top: uploadBox.offsetTop - 40, behavior: "smooth" });
+    }
+  });
 
-      form.addEventListener("submit", function (e) {
+  // File select hone pe naam show karna
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files.length > 0) {
+      fileName.textContent = `📄 Selected: ${fileInput.files[0].name}`;
+      statusMsg.textContent = "";
+    } else {
+      fileName.textContent = "";
+    }
+  });
+
+  // AJAX upload submit
+  form.addEventListener("submit", function (e) {
     e.preventDefault();
     const file = fileInput.files[0];
     if (!file) {
-        statusMsg.textContent = "⚠️ Please select a file first!";
-        statusMsg.style.color = "red";
-        return;
+      statusMsg.textContent = "⚠️ Please select a file first!";
+      statusMsg.style.color = "red";
+      return;
     }
 
     const formData = new FormData();
@@ -441,45 +473,57 @@
     progressBox.style.display = "block";
 
     xhr.upload.onprogress = function (e) {
-        const percent = Math.round((e.loaded / e.total) * 100);
-        progressBar.style.width = percent + "%";
-        progressBar.innerText = percent + "%";
+      const percent = Math.round((e.loaded / e.total) * 100);
+      progressBar.style.width = percent + "%";
+      progressBar.innerText = percent + "%";
     };
 
     xhr.onload = function () {
-        if (xhr.status === 200) {
-            statusMsg.textContent = xhr.responseText;
-            statusMsg.style.color = "green";
-        } else {
-            statusMsg.textContent = "❌ Upload failed!";
-            statusMsg.style.color = "red";
-        }
+      if (xhr.status === 200) {
+        statusMsg.textContent = xhr.responseText;
+        statusMsg.style.color = "green";
+      } else {
+        statusMsg.textContent = "❌ Upload failed!";
+        statusMsg.style.color = "red";
+      }
     };
 
     xhr.send(formData);
-});
+  });
 
-      const themeToggle = document.getElementById("themeToggle");
-      themeToggle.addEventListener("click", () => {
-        document.body.classList.toggle("bg-dark");
-        document.body.classList.toggle("text-white");
-      });
+  // Theme toggle
+  const themeToggle = document.getElementById("themeToggle");
+  themeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("bg-dark");
+    document.body.classList.toggle("text-white");
+  });
 
-      const dropzone = document.getElementById("dropzone");
-      const input = document.getElementById("fileUpload");
-      dropzone.addEventListener("click", () => input.click());
-      dropzone.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        dropzone.classList.add("bg-light");
-      });
-      dropzone.addEventListener("dragleave", () => {
-        dropzone.classList.remove("bg-light");
-      });
-      dropzone.addEventListener("drop", (e) => {
-        e.preventDefault();
-        input.files = e.dataTransfer.files;
-        dropzone.classList.remove("bg-light");
-      });
-    </script>
+  // Drag & drop upload
+  const dropzone = document.getElementById("dropzone");
+  const input = document.getElementById("fileUpload");
+  dropzone.addEventListener("click", () => input.click());
+  dropzone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropzone.classList.add("bg-light");
+  });
+  dropzone.addEventListener("dragleave", () => {
+    dropzone.classList.remove("bg-light");
+  });
+  dropzone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    input.files = e.dataTransfer.files;
+    dropzone.classList.remove("bg-light");
+  });
+</script>
+
+
+
+
+
+
+
+
+
+
   </body>
 </html>
